@@ -22,7 +22,10 @@ class Authentification extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nom' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'cpassword' => 'required|min:8|same:password',
         ];
     }
 }

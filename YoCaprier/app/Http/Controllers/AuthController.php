@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Mail\ForgotPassword;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -23,15 +26,14 @@ class AuthController extends Controller
 
 //////////////////////////////////  Register  ////////////////////////////////////
 
+    public function AfficherRegister()
+    {
+        return view('/register');
+    }
+
 
     public function register(Request $request)
     {
-        $request->validate([
-            'nom' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required',
-            'cpassword' => 'required',
-        ]);
 
         $createAccount = new User();
 
@@ -46,53 +48,109 @@ class AuthController extends Controller
 
         if($cpassword !== $password)
         {
-            return redirect()->back()->withErrors(['cpassword' => 'The password and Confirm password must be the same']);
+            return redirect()->back()->with('Errors','The password and Confirm password must be the same');
         }
         else{
-            $_SESSION['nom'] = $createAccount->name;
-            $_SESSION['email'] = $createAccount->email;
             $createAccount->save();
-            return redirect()->back();
+            return redirect('/login');
         }
     }
-
-/////////////////////////// Afficher la page de login ////////////////////////////////
     
 
-    public function AfficherLogin()
+//////////////////////////////////////// login //////////////////////////////////////
+
+    public function afficherLogin()
     {
         return view('/login');
     }
 
 
-//////////////////////////////////////// login //////////////////////////////////////
-
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-
+        
         $user = User::where('email', $request->email)->first();
-
+        
         if($user && Hash::check($request->password, $user->password))
         {
-            $_SESSION['nom'] = $user->name;
-            $_SESSION['email'] = $user->email;
+            Session(['user'=> $user]);
             return redirect('/');
         }
         else{
-            return redirect()->back();
+            return redirect()->back()->with('Error', 'The Account Already Exist');
         }
-        
     }
-//////////////////////////////////////// logout //////////////////////////////////////
+
+//////////////////////////////////////// logout ////////////////////////////////////////
 
     public function logout()
     {
         session::flush();
-        Auth::logout(); 
         return redirect('/');
+    }
+
+///////////////////////////////////// Forgot Password //////////////////////////////////////
+
+
+    public function forgot()
+    {
+        return view('forgot_password');
+    }
+
+
+    public function forgotPasword(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if(!empty($user))
+        {
+            $user->remember_token = str::random(49);
+            $user->save(); 
+            Mail::to($user->email)->send(new ForgotPassword($user));
+            // dd(Mail::to($user->email)->send(new ForgotPassword($user)));
+            return redirect()->back()->with('check', 'Check Your Email');
+        }
+        else{
+            return redirect()->back()->with('invalidEmail', 'Invalid Email');
+        }
+
+    }
+
+///////////////////////////////////// Reset Password ///////////////////////////////////////
+
+    public function afficheReset($token)
+    {
+        $user = User::where('remember_token','=',$token)->first();
+        if(!empty($user)){
+
+            $data['user'] = $user;
+
+            return view('reset',$data);
+
+        }
+        else{
+            abort(404);
+        }
+
+    }
+
+
+
+    public function ResetPassword($token, Request $request)
+    {
+        $user = User::where('remember_token','=',$token)->first();
+
+        if(!empty($user))
+        {
+            if($request->password == $request->cpassword){
+                $user->password = Hash::make($request->cpassword);
+                $user->remember_token = str::random(49);
+                $user->save();
+
+                return redirect('/login');
+            }
+            else{
+                return redirect()->back()->with('Error','Pssword and Confirm Password Incorrect');
+            }
+        }
     }
 }

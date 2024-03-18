@@ -31,39 +31,35 @@
 
    <!-- Start login -->
    <div>
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered ">
          <div class="modal-content p-4">
             <div class="modal-header border-0">
-               <h5 class="modal-title fs-3 fw-bold" id="userModalLabel">Sign in</h5>
+               <h5 id="userModalLabel">Forgot Password</h5>
             </div>
-			   @if(session('Error'))
-			   	<div class="alert alert-danger">
-			   		{{ session('Error') }}
-			   	</div>
-			   @endif
-            <div class="modal-body">
-               <form class="needs-validation" action="" method="post">
+			@if(session('check'))
+				<div class="alert alert-success">
+					{{ session('check') }}
+				</div>
+			@endif
+			@if(session('invalidEmail'))
+				<div class="alert alert-danger">
+					{{ session('invalidEmail') }}
+				</div>
+			@endif
+            <div class="modal-body ">
+               <form class="needs-validation" action="/forgot_password" method="post">
                   @csrf
                   <div class="mb-3">
                      <label for="email" class="form-label">Email address</label>
                      <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email address" required />
                      <div class="invalid-feedback">Please enter email.</div>
                   </div>
-                  <div class="mb-3">
-                     <label for="password" class="form-label">Password</label>
-                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required />
-                     <div class="invalid-feedback">Please enter password.</div>
-                  </div>
 				  <div class="modal-footer border-0 justify-content-start">
-					 I don't have an account?
+					 Create Account
 					 <a href="/register" class="text-success">Sign up</a>
-				  </div>
-                  <button type="submit" class="btn btn-success">Sign In</button>
-               </form>
-			   		<div class="modal-footer border-0 justify-content-center">
-					 I forgot my password
-					 <a href="/forgot_password" class="text-success">Forgot Password</a>
-				  	</div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Reset</button>
+                </form>
             </div>
          </div>
       </div>

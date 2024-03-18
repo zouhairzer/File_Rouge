@@ -37,13 +37,19 @@
                <i class="fas fa-user mx-3 " style="color: #000000;"></i>
              </a>
              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-               <li><a class="dropdown-item" href="#"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Login</a></li>
-               <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Register</a></li>
+               <li><a class="dropdown-item" href="/login">Login</a></li>
+               <li><a class="dropdown-item" href="/register">Register</a></li>
                <li><hr class="dropdown-divider"></li>
-               <form action="/logout" method="post">
+			   
+			   <!-- start Logout -->
+               
+			   <form action="/logout" method="post">
                   @csrf
                   <li><button type="submit" class="dropdown-item" >Log out</button></li>
                </form>
+
+			   <!-- end logout -->
+
              </ul>
             </li>
             <li class="nav-item">
@@ -53,7 +59,7 @@
        </div>
      </div>
    </nav>
-   <!--Register Modal -->
+   <!-- Start Register Modal -->
    <div class="modal fade my-5" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	   <div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content p-4">
@@ -84,12 +90,6 @@
 						<label for="password" class="form-label">Confirm Password</label>
 						<input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Enter Password" required />
 						<div class="invalid-feedback">Please Confirm password.</div>
-						<small class="form-text">
-							By Signup, you agree to our
-							<a href="#!">Terms of Service</a>
-							&
-							<a href="#!">Privacy Policy</a>
-						</small>
 					</div>
 
 					<button type="submit" class="btn btn-primary" type="submit">Sign Up</button>
@@ -99,48 +99,10 @@
 				Already have an account?
 				<a href="/login">Sign in</a>
 			</div>
+		  </div>
 		</div>
-	</div>
-   </div>
-
-<!--login Modal -->
-
-   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	   <div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content p-4">
-			<div class="modal-header border-0">
-				<h5 class="modal-title fs-3 fw-bold" id="userModalLabel">Sign in</h5>
-
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form class="needs-validation" action="/register" method="post">
-               				@csrf
-					<div class="mb-3">
-						<label for="email" class="form-label">Email address</label>
-						<input type="email" class="form-control" id="email" name="email" placeholder="Enter Email address" required />
-						<div class="invalid-feedback">Please enter email.</div>
-					</div>
-					<div class="mb-3">
-						<label for="password" class="form-label">Password</label>
-						<input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required />
-						<div class="invalid-feedback ">Please enter password.</div>
-					</div>
-						<small class="form-text ">
-							By Signup, you agree to our
-							<a href="#!" class="text-success">Terms of Service</a>
-							&
-							<a href="#!" class="text-success">Privacy Policy</a>
-						</small>
-					<button type="submit" class="btn btn-success" type="submit">Sign In</button>
-				</form>
-			</div>
-			<div class="modal-footer border-0 justify-content-center">
-				Already have an account?
-				<a href="/register" class="text-success">Sign up</a>
-			</div>
-		</div>
-	</div>
-   </div>
+      </div>
+	<!-- End Register Modal -->
+	
 </body>
 </html>

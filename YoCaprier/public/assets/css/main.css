@@ -1,0 +1,10 @@
+.forms {
+    background-image: url('assets/images/about/about-img.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.modal-content {
+    background-color: transparent;
+    box-shadow: none;
+}
