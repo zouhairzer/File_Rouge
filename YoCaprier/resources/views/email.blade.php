@@ -44,7 +44,7 @@
         <p>You are receiving this email because we received a password reset request for your account.</p>
         
         <p>In order to reset your password, please click the following link:</p>
-        <a href="/reset/{token}">Reset Password</a>
+        <a href="{{ url('reset', $user->remember_token) }}">Reset Password</a>
         <br><br>
         <p>If you did not request a password reset, no further action is required.</p>
         

@@ -23,7 +23,6 @@ class AuthController extends Controller
         return view('admin.Dashboard');
     }
 
-
 //////////////////////////////////  Register  ////////////////////////////////////
 
     public function AfficherRegister()
@@ -39,6 +38,7 @@ class AuthController extends Controller
 
         $createAccount->name = $request->nom;
         $createAccount->email = $request->email;
+        $createAccount->role_id = 2;
 
         $password = trim($request->password);
         $cpassword = trim($request->cpassword);
@@ -55,7 +55,7 @@ class AuthController extends Controller
             return redirect('/login');
         }
     }
-    
+
 
 //////////////////////////////////////// login //////////////////////////////////////
 
@@ -67,9 +67,9 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        
+
         $user = User::where('email', $request->email)->first();
-        
+
         if($user && Hash::check($request->password, $user->password))
         {
             Session(['user'=> $user]);
@@ -104,7 +104,7 @@ class AuthController extends Controller
         if(!empty($user))
         {
             $user->remember_token = str::random(49);
-            $user->save(); 
+            $user->save();
             Mail::to($user->email)->send(new ForgotPassword($user));
             // dd(Mail::to($user->email)->send(new ForgotPassword($user)));
             return redirect()->back()->with('check', 'Check Your Email');
@@ -120,11 +120,12 @@ class AuthController extends Controller
     public function afficheReset($token)
     {
         $user = User::where('remember_token','=',$token)->first();
+
         if(!empty($user)){
 
             $data['user'] = $user;
 
-            return view('reset',$data);
+            return view('/reset',$data);
 
         }
         else{
